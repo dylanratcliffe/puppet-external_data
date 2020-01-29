@@ -80,7 +80,27 @@ In the Limitations section, list any incompatibilities, known issues, or other w
 
 ## Development
 
-In the Development section, tell other users the ground rules for contributing to your project and how they should submit their work.
+### Running the tests
+
+Set up the development environment:
+
+```
+bundle install --path .bundle/gems --jobs 4 --retry 3
+bundle exec rake spec_prep
+```
+
+Build and provision servers:
+
+```
+bundle exec bolt --modulepath spec/fixtures/modules plan run external_data::demo::provision
+bundle exec bolt --modulepath spec/fixtures/modules -i ./inventory.yaml plan run external_data::demo::install
+```
+
+Destroy environment:
+
+```
+bundle exec rake litmus:tear_down
+```
 
 ## Release Notes/Contributors/Etc. **Optional**
 
