@@ -2,7 +2,27 @@
 # See https://github.com/puppetlabs/puppetlabs_spec_helper#using-fixtures for details
 ---
 fixtures:
+  forge_modules:
+    firewall: "puppetlabs/puppet_conf"
   repositories:
-    facts: 'https://github.com/puppetlabs/puppetlabs-facts.git'
-    puppet_agent: 'https://github.com/puppetlabs/puppetlabs-puppet_agent.git'
-    provision: 'https://github.com/puppetlabs/provision.git'
+    facts: "https://github.com/puppetlabs/puppetlabs-facts.git"
+    puppet_agent: "https://github.com/puppetlabs/puppetlabs-puppet_agent.git"
+    provision:
+      repo: "https://github.com/dylanratcliffe/provision.git"
+      branch: add_private_net
+    puppet_enterprise: "git@github.com:puppetlabs/puppet-enterprise-modules.git"
+  symlinks:
+    external_data: "#{source_dir}"
+    pe_concat: "#{source_dir}/spec/fixtures/modules/puppet_enterprise/modules/pe_concat"
+    pe_hocon: "#{source_dir}/spec/fixtures/modules/puppet_enterprise/modules/pe_hocon"
+    pe_infrastructure: "#{source_dir}/spec/fixtures/modules/puppet_enterprise/modules/pe_infrastructure"
+    pe_inifile: "#{source_dir}/spec/fixtures/modules/puppet_enterprise/modules/pe_inifile"
+    pe_install: "#{source_dir}/spec/fixtures/modules/puppet_enterprise/modules/pe_install"
+    pe_java_ks: "#{source_dir}/spec/fixtures/modules/puppet_enterprise/modules/pe_java_ks"
+    pe_manager: "#{source_dir}/spec/fixtures/modules/puppet_enterprise/modules/pe_manager"
+    pe_nginx: "#{source_dir}/spec/fixtures/modules/puppet_enterprise/modules/pe_nginx"
+    pe_postgresql: "#{source_dir}/spec/fixtures/modules/puppet_enterprise/modules/pe_postgresql"
+    pe_puppet_authorization: "#{source_dir}/spec/fixtures/modules/puppet_enterprise/modules/pe_puppet_authorization"
+    pe_repo: "#{source_dir}/spec/fixtures/modules/puppet_enterprise/modules/pe_repo"
+    pe_staging: "#{source_dir}/spec/fixtures/modules/puppet_enterprise/modules/pe_staging"
+    puppet_enterprise: "#{source_dir}/spec/fixtures/modules/puppet_enterprise/modules/puppet_enterprise"

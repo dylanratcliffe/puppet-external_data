@@ -1,9 +1,10 @@
 {
     "description": "Installs PE on a target",
+    "input_method": "environment",
     "parameters": {
         "version": {
             "description": "The release of PE you want to install e.g. 2018.1 (Default: latest)",
-            "type": "Optional[String[1]]",
+            "type": "String",
             "default": "latest"
         }
     }

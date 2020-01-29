@@ -8,6 +8,8 @@ cat << EOF > /tmp/pe.conf
   # Additional customization
   "puppet_enterprise::profile::master::check_for_updates": false
   "puppet_enterprise::send_analytics_data": false
+  "puppet_enterprise::profile::master::r10k_remote": "https://github.com/puppetlabs/control-repo.git"
+  "puppet_enterprise::profile::master::code_manager_auto_configure": true
 
   "puppet_enterprise::master::puppetserver::jruby_max_active_instances": 1
   "puppet_enterprise::profile::master::java_args": { Xmx: "1024m", Xms: "128m" }
@@ -24,8 +26,11 @@ rm -rf /tmp/pe.tar.gz /tmp/pe
 # Get the RHEL version
 major_version=$(rpm -q --queryformat '%{RELEASE}' rpm | grep -o [[:digit:]]*\$)
 
+download_url="https://pm.puppet.com/cgi-bin/download.cgi?dist=el&rel=${major_version}&arch=x86_64&ver=${PT_version}"
+
 # Download PE
-curl -L -o /tmp/pe.tar.gz "https://pm.puppet.com/cgi-bin/download.cgi?dist=el&rel=$major_version&arch=x86_64&ver=$PT_version"
+echo "Downloading: ${download_url}"
+curl -L -o /tmp/pe.tar.gz $download_url
 
 # Extract
 mkdir -p /tmp/pe

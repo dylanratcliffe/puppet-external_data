@@ -93,7 +93,7 @@ Build and provision servers:
 
 ```
 bundle exec bolt --modulepath spec/fixtures/modules plan run external_data::demo::provision
-bundle exec bolt --modulepath spec/fixtures/modules -i ./inventory.yaml plan run external_data::demo::install
+bundle exec bolt --modulepath spec/fixtures/modules -i ./inventory.yaml plan run external_data::demo::setup
 ```
 
 Destroy environment:
