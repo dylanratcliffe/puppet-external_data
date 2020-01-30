@@ -14,12 +14,14 @@ define external_data::file_sync_repo (
   Boolean $client_active             = true,
   String  $file_sync_config_file     = '/etc/puppetlabs/puppetserver/conf.d/file-sync.conf',
 ) {
+  include external_data::puppetserver_reload
+
   $is_source  = $replication_mode == 'source'
   $is_replica = $replication_mode == 'replica'
 
   Pe_hocon_setting {
     path   => $file_sync_config_file,
-    # notify => Service['pe-puppetserver'],
+    notify => Class['external_data::puppetserver_reload'],
   }
 
   File {
