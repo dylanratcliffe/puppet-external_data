@@ -28,6 +28,16 @@ plan external_data::demo::setup {
   run_command("echo ${primary_ip} ${primary.facts['fqdn']} >> /etc/hosts", $secondary)
   run_command("curl -k https://${primary.facts['fqdn']}:8140/packages/current/install.bash | bash", $secondary)
   run_command('until /opt/puppetlabs/bin/puppet agent -t; do sleep 1; done', $hosts)
+  run_command('echo "`facter ipaddress` `facter fqdn`" >> /etc/hosts', $hosts)
+
+  # Create host entries for secondary in primary
+  run_plan('facts', $secondary)
+  $secondary_ip = $secondary.facts['virtual'] ? {
+    'virtualbox' => $secondary.facts['networking']['interfaces']['eth1']['ip'],
+    default      => $secondary.facts['ipaddress',]
+  }
+  run_command("echo ${secondary_ip} ${secondary.facts['fqdn']} >> /etc/hosts", $primary)
+
 
   # Code deploy to initialise
   run_command('echo "puppetlabs" | puppet access login admin --lifetime 0', $primary)
@@ -37,7 +47,7 @@ plan external_data::demo::setup {
   run_command('puppet infrastructure provision replica master-secondary.puppet.demo', $primary)
   run_command('puppet infrastructure enable replica master-secondary.puppet.demo --topology mono --yes', $primary)
 
-  run_plan('external_data::demo::setup', {
+  run_plan('external_data::demo::install', {
     'primary'   => $primary,
     'secondary' => $secondary,
   })

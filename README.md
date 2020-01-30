@@ -84,21 +84,21 @@ In the Limitations section, list any incompatibilities, known issues, or other w
 
 Set up the development environment:
 
-```
+```shell
 bundle install --path .bundle/gems --jobs 4 --retry 3
 bundle exec rake spec_prep
 ```
 
 Build and provision servers:
 
-```
+```shell
 bundle exec bolt --modulepath spec/fixtures/modules plan run external_data::demo::provision
 bundle exec bolt --modulepath spec/fixtures/modules -i ./inventory.yaml plan run external_data::demo::setup
 ```
 
 Destroy environment:
 
-```
+```shell
 bundle exec rake litmus:tear_down
 ```
 

@@ -1,0 +1,11 @@
+{
+    "description": "Commits to the ",
+    "input_method": "environment",
+    "parameters": {
+        "repo_id": {
+            "description": "The file-sync repo to commit",
+            "type": "String",
+            "default": "external-data"
+        }
+    }
+}

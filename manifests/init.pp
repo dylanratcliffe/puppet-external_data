@@ -1,14 +1,12 @@
 class external_data (
-  String $data_live_dir = '/opt/puppetlabs/puppetserver/external_data',
-  String $data_staging_dir = '/opt/puppetlabs/puppetserver/external_data_staging',
-  Puppet_enterprise::Replication_mode $replication_mode = 'source',
+  String $data_live_location    = '/etc/puppetlabs/puppetserver/external_data',
+  String $data_staging_location = '/etc/puppetlabs/puppetserver/external_data_staging',
+  String $replication_mode      = 'source',
 ) {
-
-  # Ensure that directories exist
-  file { [$data_live_dir, $data_staging_dir]:
-    ensure => 'directory',
-    owner  => 'pe-puppet',
-    group  => 'pe-puppet',
-    mode   => '0750',
+  # Ensure that file sync is working
+  external_data::file_sync_repo { 'external-data':
+    replication_mode => $replication_mode,
+    live_location    => $data_live_location,
+    staging_location => $data_staging_location,
   }
 }
