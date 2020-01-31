@@ -9,12 +9,14 @@ module Puppet_X
         # Mark the cache as dirty so that the commit method can be called
         dirty!
         _delete(forager, certname)
+        nil
       end
 
       def update(forager, certname, data)
         # Mark the cache as dirty so that the commit method can be called
         dirty!
         _update(forager, certname, data)
+        data
       end
 
       # The dirty methods mark if the cache has been changed so that it can

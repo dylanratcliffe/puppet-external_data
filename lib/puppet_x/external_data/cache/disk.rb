@@ -1,5 +1,6 @@
 require 'puppet_x/external_data/cache'
 require 'puppet_x/external_data/multiplexer'
+require 'fileutils'
 require 'json'
 
 # Disk cache
@@ -18,13 +19,19 @@ module Puppet_X::ExternalData
     def _get(forager, certname)
       ensure_forager(forager)
 
-      JSON.parse(File.read(certname_path(forager, certname)))
+      begin
+        JSON.parse(File.read(certname_path(forager, certname)))
+      rescue StandardError
+        # If something went wrong then we don't have a cache
+        return nil
+      end
     end
 
     def _delete(forager, certname)
       ensure_forager(forager)
 
-      File.delete(certname_path(forager, certname))
+      file = certname_path(forager, certname)
+      File.delete(file) if File.file? file
     end
 
     def _update(forager, certname, data)
@@ -36,7 +43,7 @@ module Puppet_X::ExternalData
     private
 
     def ensure_forager(forager)
-      Dir.mkdir(forager_path(forager)) unless File.directory? forager_path(forager)
+      FileUtils.mkdir_p(forager_path(forager)) unless File.directory? forager_path(forager)
     end
 
     def forager_path(forager)
