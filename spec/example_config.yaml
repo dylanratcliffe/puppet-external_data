@@ -1,0 +1,8 @@
+---
+cache:
+  name: none
+  options: {}
+foragers:
+  - name: example
+    options:
+      colour: red

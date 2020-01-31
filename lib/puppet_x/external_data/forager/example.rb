@@ -1,18 +1,16 @@
 require 'puppet_x/external_data/forager'
+require 'puppet_x/external_data/multiplexer'
 
 module Puppet_X::ExternalData
   class Forager::Example < Puppet_X::ExternalData::Forager
     def initialize(opts)
       @data = nil
+      @colour = opts[:colour] || 'not specified'
       super(opts)
     end
 
     def type
       :ondemand_cached
-    end
-
-    def name
-      'example'
     end
 
     def get_data(certname)
@@ -22,8 +20,13 @@ module Puppet_X::ExternalData
       @data = {
         'certname' => certname,
         'upcase'   => certname.upcase,
+        'colour'   => @colour,
         'rot13'    => rot13(certname),
       }
+    end
+
+    def name
+      'example'
     end
 
     private
@@ -36,3 +39,5 @@ module Puppet_X::ExternalData
     end
   end
 end
+
+Puppet_X::ExternalData::Multiplexer.register_forager('example', Puppet_X::ExternalData::Forager::Example)

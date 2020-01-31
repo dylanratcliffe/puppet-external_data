@@ -1,7 +1,7 @@
-require 'puppet_x/external_data/cache/example'
+require 'puppet_x/external_data/cache/none'
 
-describe Puppet_X::ExternalData::Cache::Example do
-  let(:cache) { Puppet_X::ExternalData::Cache::Example.new }
+describe Puppet_X::ExternalData::Cache::None do
+  let(:cache) { described_class.new }
 
   it 'has the correct methods' do
     expect(cache).to respond_to(:get)

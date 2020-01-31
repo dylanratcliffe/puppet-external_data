@@ -67,7 +67,6 @@ module Puppet_X
 
             # When an empty hash is returned it means that we need to delete the
             # cached data and return nothing
-            # TODO: Delete from cache
             cache.delete(certname)
             logger.info("#{certname} deleted form cache")
             return nil

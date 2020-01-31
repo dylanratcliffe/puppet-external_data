@@ -16,7 +16,7 @@ describe Puppet_X::ExternalData::Forager::Example do
   end
 
   it 'has a name' do
-    expect(forager.name).to be_a(String)
+    expect(described_class.name).to be_a(String)
   end
 
   it 'has a type' do
@@ -39,7 +39,7 @@ describe Puppet_X::ExternalData::Forager::Example do
   end
 
   context 'when using all methods' do
-    let(:cache) { Puppet_X::ExternalData::Cache::Example.new }
+    let(:cache) { Puppet_X::ExternalData::Cache::None.new }
 
     it 'returns data from data_for()' do
       expect(forager.data_for('return.example.com')).to be_a(Hash)
