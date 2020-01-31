@@ -14,8 +14,8 @@ describe Puppet_X::ExternalData::Cache::None do
       'foo' => 'bar',
     }
 
-    expect(cache.update('foo.example.com', data)).to be(data)
-    expect(cache.get('foo.example.com')).to be(data)
+    expect(cache.update('test', 'foo.example.com', data)).to be(data)
+    expect(cache.get('test', 'foo.example.com')).to be(data)
   end
 
   it 'can delete data' do
@@ -23,9 +23,9 @@ describe Puppet_X::ExternalData::Cache::None do
       'foo' => 'bar',
     }
 
-    expect(cache.update('foo.example.com', data)).to be(data)
-    expect(cache.get('foo.example.com')).to be(data)
-    cache.delete('foo.example.com')
-    expect(cache.get('foo.example.com')).to be(nil)
+    expect(cache.update('test', 'foo.example.com', data)).to be(data)
+    expect(cache.get('test', 'foo.example.com')).to be(data)
+    cache.delete('test', 'foo.example.com')
+    expect(cache.get('test', 'foo.example.com')).to be(nil)
   end
 end

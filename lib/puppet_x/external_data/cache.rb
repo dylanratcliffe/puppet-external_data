@@ -1,20 +1,20 @@
 module Puppet_X
   module ExternalData
     class Cache
-      def get(certname)
-        _get(certname)
+      def get(forager, certname)
+        _get(forager, certname)
       end
 
-      def delete(certname)
+      def delete(forager, certname)
         # Mark the cache as dirty so that the commit method can be called
         dirty!
-        _delete(certname)
+        _delete(forager, certname)
       end
 
-      def update(certname, data)
+      def update(forager, certname, data)
         # Mark the cache as dirty so that the commit method can be called
         dirty!
-        _update(certname, data)
+        _update(forager, certname, data)
       end
 
       # The dirty methods mark if the cache has been changed so that it can
@@ -33,15 +33,15 @@ module Puppet_X
 
       # Cache plugins much implement the below methods that start with an
       # underscore
-      def _get(_certname)
+      def _get(_forager, _certname)
         raise '_get method not implemented'
       end
 
-      def _delete(_certname)
+      def _delete(_forager, _certname)
         raise '_delete method not implemented'
       end
 
-      def _update(_certname, _data)
+      def _update(_forager, _certname, _data)
         raise '_update method not implemented'
       end
 

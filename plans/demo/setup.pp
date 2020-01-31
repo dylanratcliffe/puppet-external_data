@@ -5,6 +5,7 @@ plan external_data::demo::setup {
 
   run_command('hostnamectl set-hostname master-primary.puppet.demo', $primary)
   run_command('hostnamectl set-hostname master-secondary.puppet.demo', $secondary)
+  run_command('echo "nameserver 8.8.8.8" > /etc/resolv.conf', $hosts)
 
   run_task('external_data::demo_install_pe', $primary)
 

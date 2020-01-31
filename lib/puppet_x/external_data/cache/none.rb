@@ -13,16 +13,28 @@ module Puppet_X::ExternalData
       @storage = {}
     end
 
-    def _get(certname)
-      @storage[certname]
+    def _get(forager, certname)
+      ensure_forager(forager)
+
+      @storage[forager][certname]
     end
 
-    def _delete(certname)
-      @storage.delete(certname)
+    def _delete(forager, certname)
+      ensure_forager(forager)
+
+      @storage[forager].delete(certname)
     end
 
-    def _update(certname, data)
-      @storage[certname] = data
+    def _update(forager, certname, data)
+      ensure_forager(forager)
+
+      @storage[forager][certname] = data
+    end
+
+    private
+
+    def ensure_forager(forager)
+      @storage[forager] = {} if @storage[forager].nil?
     end
   end
 end

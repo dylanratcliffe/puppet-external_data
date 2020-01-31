@@ -49,7 +49,21 @@ module Puppet_X
       end
 
       def get(certname)
-        
+        require 'thread'
+
+        threads = []
+        @data   = {}
+        foragers.each do |forager|
+          threads << Thread.new do
+            @data[forager.name] = forager.data_for(certname)
+          end
+        end
+        threads.each(&:join)
+
+        # Commit the data to the cache if it's required
+        cache.commit
+
+        @data
       end
 
       def self.register_cache(cache_class)
@@ -67,7 +81,7 @@ module Puppet_X
       end
 
       def keys_to_sym(hash)
-        hash.reduce({}){|memo,(k,v)| memo[k.to_sym] = v; memo}
+        hash.reduce({}) { |memo, (k, v)| memo[k.to_sym] = v; memo }
       end
     end
   end

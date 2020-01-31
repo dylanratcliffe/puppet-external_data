@@ -61,24 +61,24 @@ module Puppet_X
             logger.info("#{certname} not updated, using cache")
 
             # This means that nothing has changed and we should use the cache
-            return cache.get(certname)
+            return cache.get(name, certname)
           when {}
             logger.info("#{certname} deleted, deleting cached data")
 
             # When an empty hash is returned it means that we need to delete the
             # cached data and return nothing
-            cache.delete(certname)
+            cache.delete(name, certname)
             logger.info("#{certname} deleted form cache")
             return nil
           else
             logger.info("#{certname} updated, persisting to cache")
-            cache.update(certname, data)
+            cache.update(name, certname, data)
             logger.info("#{certname} saved to cache")
             return data
           end
         when :batch
           # This should always get cached data
-          cache.get(certname)
+          cache.get(name, certname)
         end
       end
 
