@@ -23,10 +23,13 @@
 # Batch foragers will always return cached data on catalog compiles as they
 # only do updates in batches.
 #
+require 'logger'
+
 module Puppet_X
   module ExternalData
     class Forager
       attr_reader :cache
+      attr_reader :logger
 
       def initialize(opts = {})
         # Perform validation
@@ -34,12 +37,18 @@ module Puppet_X
 
         raise ':cache option must be specified' unless opts[:cache]
         @cache = opts[:cache]
+
+        # Create logging config
+        @logger = Logger.new(STDERR)
+        @logger.level = Logger::DEBUG
       end
 
       # This method will be called each time a catalog is compiled. It should
       # return the data for a given node. Mostly it is responsible for calling
       # out to the appropriate methods to actually go and get the data.
       def data_for(certname)
+        logger.info("Finding data for #{certname} using forager #{name}")
+
         case type
         when :ondemand
           get_data(certname)
@@ -49,16 +58,23 @@ module Puppet_X
 
           case data
           when nil
+            logger.info("#{certname} not updated, using cache")
+
             # This means that nothing has changed and we should use the cache
             return cache.get(certname)
           when {}
+            logger.info("#{certname} deleted, deleting cached data")
+
             # When an empty hash is returned it means that we need to delete the
             # cached data and return nothing
             # TODO: Delete from cache
             cache.delete(certname)
+            logger.info("#{certname} deleted form cache")
             return nil
           else
+            logger.info("#{certname} updated, persisting to cache")
             cache.update(certname, data)
+            logger.info("#{certname} saved to cache")
             return data
           end
         when :batch

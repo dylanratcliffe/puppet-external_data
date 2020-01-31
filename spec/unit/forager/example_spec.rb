@@ -1,9 +1,19 @@
 require 'puppet_x/external_data/forager/example'
 require 'puppet_x/external_data/cache'
+require 'logger'
 
 describe Puppet_X::ExternalData::Forager::Example do
   let(:cache) { Puppet_X::ExternalData::Cache.new }
-  let(:forager) { described_class.new(cache: cache) }
+  let(:forager) do
+    f = described_class.new(cache: cache)
+
+    # Supress logging
+    logger = Logger.new(STDOUT)
+    allow(f).to receive(:logger).and_return(logger)
+    allow(logger).to receive(:info)
+    allow(logger).to receive(:debug)
+    return f
+  end
 
   it 'has a name' do
     expect(forager.name).to be_a(String)
