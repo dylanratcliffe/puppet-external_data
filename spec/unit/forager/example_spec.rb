@@ -27,4 +27,24 @@ describe Puppet_X::ExternalData::Forager::Example do
     expect(forager.get_data('foo.example.com')).to be_a(Hash)
     expect(forager.get_data('foo.example.com')).to be(nil)
   end
+
+  context 'when using all methods' do
+    let(:cache) { Puppet_X::ExternalData::Cache::Example.new }
+
+    it 'returns data from data_for()' do
+      expect(forager.data_for('return.example.com')).to be_a(Hash)
+    end
+
+    it 'stores data to the cache' do
+      expect(cache).to receive(:update).and_call_original
+      expect(forager.data_for('store.example.com')).to be_a(Hash)
+    end
+
+    it 'returns data from the cache' do
+      expect(cache).to receive(:update).and_call_original
+      expect(cache).to receive(:get).and_call_original
+      expect(forager.data_for('get.example.com')).to be_a(Hash)
+      expect(forager.data_for('get.example.com')).to be_a(Hash)
+    end
+  end
 end
