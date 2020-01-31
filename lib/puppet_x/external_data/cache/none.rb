@@ -13,15 +13,15 @@ module Puppet_X::ExternalData
       @storage = {}
     end
 
-    def get(certname)
+    def _get(certname)
       @storage[certname]
     end
 
-    def delete(certname)
+    def _delete(certname)
       @storage.delete(certname)
     end
 
-    def update(certname, data)
+    def _update(certname, data)
       @storage[certname] = data
     end
   end

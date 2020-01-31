@@ -48,6 +48,10 @@ module Puppet_X
         end
       end
 
+      def get(certname)
+        
+      end
+
       def self.register_cache(cache_class)
         @@cache = cache_class # rubocop:disable Style/ClassVars
       end
