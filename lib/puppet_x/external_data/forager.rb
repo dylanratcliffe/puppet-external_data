@@ -58,7 +58,7 @@ module Puppet_X
             cache.delete(certname)
             return nil
           else
-            cache.update(data)
+            cache.update(certname, data)
             return data
           end
         when :batch

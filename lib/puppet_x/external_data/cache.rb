@@ -1,5 +1,7 @@
-module Puppet_X::ExternalData
-  class Cache
+module Puppet_X
+  module ExternalData
+    class Cache
 
+    end
   end
 end
