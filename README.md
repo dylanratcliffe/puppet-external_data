@@ -18,3 +18,24 @@ Similar to an `:ondemand` forager except that it is able to receive an empty res
 
 Batch foragers will always return cached data on catalog compiles as they only do updates in batches. **This has yet to be implemented**
 
+### Writing Foragers
+
+Foragers must implement the following methods:
+
+#### `type`
+
+This should return the type of the forager, this needs to be one of the following:
+
+* `:ondemand`
+* `:ondemand_cached`
+* `:batch`
+
+This affects how the results of this forager will be treated (if it will be cached)
+
+#### `get_data(certname)`
+
+This will be called when a node checks in, with the certname passed in a string. It should return a hash of data relevant to that node. In the case of an `:ondemand_cached` backend it could also return `nil`, which would mean that the latest cached data should be used. If you want to explicitly return nothing, like of the node's data has been deleted, return an empty hash `{}`
+
+#### `name`
+
+This should return the name of the forager.
