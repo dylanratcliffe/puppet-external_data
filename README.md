@@ -66,3 +66,8 @@ Install the module:
 bundle exec rake 'litmus:install_module'
 ```
 
+Run acceptance tests:
+
+```shell
+bundle exec rake 'litmus:acceptance:parallel'
+```

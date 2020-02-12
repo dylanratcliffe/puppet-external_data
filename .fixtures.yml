@@ -5,3 +5,6 @@ fixtures:
   forge_modules:
     stdlib: puppetlabs/stdlib
     inifile: puppetlabs/inifile
+  repositories:
+    facts: "https://github.com/puppetlabs/puppetlabs-facts.git"
+    provision: "https://github.com/puppetlabs/provision.git"

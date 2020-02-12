@@ -3,6 +3,4 @@ docker:
   provisioner: docker_exp
   images:
     - "puppet/puppetserver:latest"
-    # - "puppet/puppetserver:6.7.0"
-    # - "puppet/puppetserver:6.7.1"
-    # - "puppet/puppetserver:6.7.2"
+    - "puppet/puppetserver:6.7.2"

@@ -1,6 +1,13 @@
 #!/opt/puppetlabs/puppet/bin/ruby
 
-require 'puppet_x/external_data/multiplexer'
+begin
+  require 'puppet_x/external_data/multiplexer'
+rescue LoadError
+  STDERR.puts 'loading of puppet_x/external_data/multiplexer failed, no external data will be returned'
+  puts '{}'
+  exit 0
+end
+
 require 'json'
 
 certname    = ARGV[0]

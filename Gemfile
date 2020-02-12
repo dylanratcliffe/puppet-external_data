@@ -30,6 +30,7 @@ group :development do
   gem "puppet-module-win-dev-r#{minor_version}", '~> 0.3',       require: false, platforms: [:mswin, :mingw, :x64_mingw]
   gem "pry",                                                     require: false
   gem "pry-byebug",                                              require: false
+  gem "rspec-wait",                                              require: false
 end
 
 puppet_version = ENV['PUPPET_GEM_VERSION']

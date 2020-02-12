@@ -3,5 +3,8 @@ Gemfile:
     ":development":
       - gem: "pry"
       - gem: "pry-byebug"
+      - gem: "rspec-wait"
+      # - gem: "bolt"
+      #   version: "<= 1.48.0"
 spec/spec_helper.rb:
   mock_with: ":rspec"
