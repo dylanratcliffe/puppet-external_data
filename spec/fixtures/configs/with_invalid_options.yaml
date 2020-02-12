@@ -1,0 +1,9 @@
+---
+cache:
+  name: none
+  options: 6
+foragers:
+  - name: example
+    options:
+      - when: now
+      - when: later

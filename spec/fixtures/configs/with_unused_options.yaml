@@ -1,0 +1,10 @@
+---
+cache:
+  name: none
+  options:
+    hill: false
+foragers:
+  - name: example
+    options:
+      colour: blue
+      time: "7:30am"

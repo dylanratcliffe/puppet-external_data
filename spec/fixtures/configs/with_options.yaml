@@ -1,0 +1,7 @@
+---
+cache:
+  name: none
+foragers:
+  - name: example
+    options:
+      colour: blue
