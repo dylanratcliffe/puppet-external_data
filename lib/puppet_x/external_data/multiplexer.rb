@@ -12,8 +12,9 @@
 #
 require 'yaml'
 
-module Puppet_X
-  module ExternalData
+module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase,Style/ClassAndModuleChildren
+  module ExternalData # rubocop:disable Style/ClassAndModuleChildren
+    # This is the main multiplexer class which is run
     class Multiplexer
       @@forager_classes = {} # rubocop:disable Style/ClassVars
 
@@ -96,7 +97,10 @@ module Puppet_X
       def keys_to_sym(hash)
         return nil if hash.nil? # Don't operate on nil
 
-        hash.reduce({}) { |memo, (k, v)| memo[k.to_sym] = v; memo }
+        hash.reduce({}) do |memo, (k, v)| # rubocop:disable Style/EachWithObject
+          memo[k.to_sym] = v
+          memo
+        end
       end
     end
   end

@@ -5,7 +5,7 @@ def config_filepath(name)
   File.expand_path("../fixtures/configs/#{name}.yaml", __dir__)
 end
 
-describe Puppet_X::ExternalData::Multiplexer do
+describe Puppet_X::ExternalData::Multiplexer do # rubocop:disable RSpec/FilePath
   context 'with good config file' do
     let(:config_file) { config_filepath('example_config') }
     let(:multiplexer) { described_class.new(config_file) }
