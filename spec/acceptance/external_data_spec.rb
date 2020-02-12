@@ -4,7 +4,7 @@ def server_status
   run_shell('curl -k https://127.0.0.1:8140/status/v1/simple', expect_failures: true).stdout
 end
 
-context 'with example config', wait: { timeout: 30 } do
+context 'with example config', wait: { timeout: 60 } do
   it 'configures itself' do
     config_pp = <<-PUPPETCODE
       host { 'puppet':
@@ -36,13 +36,13 @@ context 'with example config', wait: { timeout: 30 } do
       }
     PUPPETCODE
 
-    wait_for(server_status).to eq('running')
+    wait_for { server_status }.to eq('running')
     idempotent_apply(config_pp)
-    wait_for(server_status).to eq('running')
+    wait_for { server_status }.to eq('running')
   end
 
   it 'can run puppet agent' do
-    wait_for(server_status).to eq('running')
+    wait_for { server_status }.to eq('running')
     expect(run_shell('puppet agent -t').exit_code).to be(0)
   end
 end

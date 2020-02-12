@@ -1,5 +1,8 @@
 #!/opt/puppetlabs/puppet/bin/ruby
 
+# Set the load path
+$LOAD_PATH.unshift '/opt/puppetlabs/puppet/cache/lib'
+
 begin
   require 'puppet_x/external_data/multiplexer'
 rescue LoadError
