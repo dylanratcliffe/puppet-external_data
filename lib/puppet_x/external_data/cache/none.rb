@@ -3,7 +3,8 @@ require 'puppet_x/external_data/multiplexer'
 
 # Very simple example cache. It caches data in memory which is only useful for
 # testing as normally each request will be made in a new process.
-module Puppet_X::ExternalData
+module Puppet_X::ExternalData # rubocop:disable Style/ClassAndModuleCamelCase
+  # This cache does no caching
   class Cache::None < Puppet_X::ExternalData::Cache
     def self.name
       'none'

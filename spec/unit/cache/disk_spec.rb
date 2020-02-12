@@ -3,7 +3,11 @@ require 'tmpdir'
 require 'fileutils'
 require 'securerandom'
 
-describe Puppet_X::ExternalData::Cache::Disk do
+# We need to use these sure ensure that tempfiles are cleaned up
+# rubocop:disable RSpec/BeforeAfterAll
+# rubocop:disable RSpec/InstanceVariable
+
+describe Puppet_X::ExternalData::Cache::Disk do # rubocop:disable RSpec/FilePath
   before(:all) { @dir = File.join(Dir.tmpdir, SecureRandom.alphanumeric) }
   let(:cache) { described_class.new(path: @dir) }
 

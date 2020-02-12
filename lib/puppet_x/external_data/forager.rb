@@ -25,8 +25,9 @@
 #
 require 'logger'
 
-module Puppet_X
-  module ExternalData
+module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase,Style/ClassAndModuleChildren
+  module ExternalData # rubocop:disable Style/ClassAndModuleChildren
+    # Base classe for foragers, all should inherit this
     class Forager
       attr_reader :cache
       attr_reader :logger

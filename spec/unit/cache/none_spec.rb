@@ -1,6 +1,6 @@
 require 'puppet_x/external_data/cache/none'
 
-describe Puppet_X::ExternalData::Cache::None do
+describe Puppet_X::ExternalData::Cache::None do # rubocop:disable RSpec/FilePath
   let(:cache) { described_class.new }
 
   it 'has the correct methods' do

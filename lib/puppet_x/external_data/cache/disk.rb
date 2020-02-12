@@ -3,8 +3,8 @@ require 'puppet_x/external_data/multiplexer'
 require 'fileutils'
 require 'json'
 
-# Disk cache
-module Puppet_X::ExternalData
+module Puppet_X::ExternalData # rubocop:disable Style/ClassAndModuleCamelCase
+  # Class that uses the disk for a cache
   class Cache::Disk < Puppet_X::ExternalData::Cache
     attr_reader :path
 

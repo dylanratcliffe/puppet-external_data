@@ -1,5 +1,6 @@
-module Puppet_X
-  module ExternalData
+module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase,Style/ClassAndModuleChildren
+  module ExternalData # rubocop:disable Style/ClassAndModuleChildren
+    # Cache base class, inherited by other caches
     class Cache
       def get(forager, certname)
         _get(forager, certname)

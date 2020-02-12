@@ -2,7 +2,7 @@ require 'puppet_x/external_data/forager/example'
 require 'puppet_x/external_data/cache'
 require 'logger'
 
-describe Puppet_X::ExternalData::Forager::Example do
+describe Puppet_X::ExternalData::Forager::Example do # rubocop:disable RSpec/FilePath
   let(:cache) { Puppet_X::ExternalData::Cache.new }
   let(:forager) do
     f = described_class.new(cache: cache)
