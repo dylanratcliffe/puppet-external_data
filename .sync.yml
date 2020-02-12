@@ -8,3 +8,16 @@ Gemfile:
       #   version: "<= 1.48.0"
 spec/spec_helper.rb:
   mock_with: ":rspec"
+
+".travis.yml":
+  deploy_to_forge:
+    enabled: false
+  includes:
+    - before_script:
+        - bundle exec rake 'litmus:provision_list[docker]'
+        - bundle exec rake litmus:install_module
+      script:
+        - bundle exec rake litmus:acceptance:parallel
+      services: docker
+      sudo: required
+      stage: acceptance
