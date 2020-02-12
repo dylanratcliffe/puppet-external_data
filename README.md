@@ -20,6 +20,8 @@ Batch foragers will always return cached data on catalog compiles as they only d
 
 ### Writing Foragers
 
+[Example Forager](https://github.com/dylanratcliffe/puppet-external_data/blob/master/lib/puppet_x/external_data/forager/example.rb)
+
 Foragers must implement the following methods:
 
 #### `type`
@@ -39,6 +41,38 @@ This will be called when a node checks in, with the certname passed in a string.
 #### `name`
 
 This should return the name of the forager.
+
+### Writing Caches
+
+[Example Cache](https://github.com/dylanratcliffe/puppet-external_data/blob/master/lib/puppet_x/external_data/cache/disk.rb)
+
+Caches are responsible for storing data persistently. They have a set of methods that they need to implement which will be detailed below.
+
+#### `self.name`
+
+The name of the cache, this is what is used in the config file
+
+#### `_get(forager, certname)`
+
+* `forager`: The name of the forager which is getting its data
+* `certname`: The certname of the machine we are requesting for
+
+This should return a hash of data for the requested node. Note that caches should be able to store data for each forager somewhat separately as there is guarantee that one forager won't hav keys that clash with another for a given host.
+
+#### `_delete(forager, certname)`
+
+* `forager`: The name of the forager which is deleting its data
+* `certname`: The certname of the machine we are requesting for
+
+This should delete the data for a given forager & certname combo. The return value is discarded.
+
+#### `_update(forager, certname, data)
+
+* `forager`: The name of the forager which is updating its data
+* `certname`: The certname of the machine we are requesting for
+* `data`: The hash of data to store
+
+The cache should persist the given data.
 
 ## Development
 

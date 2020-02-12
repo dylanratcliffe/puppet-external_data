@@ -31,6 +31,7 @@ group :development do
   gem "pry",                                                     require: false
   gem "pry-byebug",                                              require: false
   gem "rspec-wait",                                              require: false
+  gem "github_changelog_generator",                              require: false
 end
 
 puppet_version = ENV['PUPPET_GEM_VERSION']

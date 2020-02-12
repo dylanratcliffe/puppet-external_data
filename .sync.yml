@@ -4,6 +4,7 @@ Gemfile:
       - gem: "pry"
       - gem: "pry-byebug"
       - gem: "rspec-wait"
+      - gem: "github_changelog_generator"
       # - gem: "bolt"
       #   version: "<= 1.48.0"
 spec/spec_helper.rb:
