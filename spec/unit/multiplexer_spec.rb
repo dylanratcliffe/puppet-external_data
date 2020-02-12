@@ -72,10 +72,9 @@ describe Puppet_X::ExternalData::Multiplexer do
 
   context 'with invalid settings' do
     let(:config_file) { config_filepath('with_invalid_options') }
-    let(:multiplexer) { described_class.new(config_file) }
 
     it 'fails nicely' do
-      expect(multiplexer.get('invalid.settings.com')).to raise_error(%r{options hash for forager example is invalid})
+      expect { described_class.new(config_file) }.to raise_error(%r{options})
     end
   end
 
@@ -84,7 +83,7 @@ describe Puppet_X::ExternalData::Multiplexer do
     let(:multiplexer) { described_class.new(config_file) }
 
     it 'uses defaults' do
-      expect(multiplexer.foragers.length).to eq(0)
+      expect(multiplexer.foragers.length).to eq(1)
       expect(multiplexer.foragers.first).to be_a(Puppet_X::ExternalData::Forager::Example)
       expect(multiplexer.get('without.options.com')['example']['colour']).to eq('not specified')
     end
@@ -92,30 +91,25 @@ describe Puppet_X::ExternalData::Multiplexer do
 
   context 'without a config file' do
     context 'because it wasn\'t set' do
-      let(:config_file) { nil }
-      let(:multiplexer) { described_class.new(config_file) }
-
       it 'fails nicely' do
-        expect(multiplexer.get('without.config.com')).to raise_error(%r{no config file specified})
+        expect { described_class.new }.to raise_error(%r{No config file specified})
       end
     end
 
     context 'because it doesn\'t exist' do
       let(:config_file) { config_filepath('doesnt_exist') }
-      let(:multiplexer) { described_class.new(config_file) }
 
       it 'fails nicely' do
-        expect(multiplexer.get('without.config.com')).to raise_error(%r{doesnt_exist.yaml not found})
+        expect { described_class.new(config_file) }.to raise_error(%r{doesnt_exist.yaml})
       end
     end
   end
 
   context 'with an invalid YAML file' do
     let(:config_file) { config_filepath('invalid_yaml') }
-    let(:multiplexer) { described_class.new(config_file) }
 
     it 'fails nicely' do
-      expect(multiplexer.get('without.config.com')).to raise_error(%r{invalid_yaml.yaml contains invalid YAML})
+      expect { described_class.new(config_file) }.to raise_error(%r{invalid_yaml.yaml})
     end
   end
 end

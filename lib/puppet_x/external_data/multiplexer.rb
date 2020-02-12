@@ -21,13 +21,23 @@ module Puppet_X
       attr_reader :cache
       attr_reader :foragers
 
-      def initialize(config_file)
-        @config = YAML.safe_load(File.read(config_file))
+      def initialize(config_file = nil)
+        raise 'No config file specified' if config_file.nil?
+        raise "Conifg file #{config_file} does not exist" unless File.file?(config_file)
+
+        begin
+          @config = YAML.safe_load(File.read(config_file))
+        rescue StandardError => e
+          raise "Error ancountered while parsing #{config_file}\n#{e}"
+        end
+
+        validate_config!
         @foragers = []
 
         # Load the specified cache
         cache_name    = config['cache']['name']
         cache_options = keys_to_sym(config['cache']['options'])
+
         require "puppet_x/external_data/cache/#{cache_name}"
         @cache = @@cache.new(cache_options)
 
@@ -38,7 +48,7 @@ module Puppet_X
           require "puppet_x/external_data/forager/#{name}"
 
           # Pull the options out of the config
-          opts = keys_to_sym(forager['options'])
+          opts = keys_to_sym(forager['options']) || {}
           opts[:cache] = cache
 
           # Pull out the forager class and initialize it
@@ -77,10 +87,15 @@ module Puppet_X
       private
 
       def validate_config!
-        raise 'cache must be specified' unless config['cache']['name'].is_a? String
+        raise 'cache must be specified' unless @config['cache']['name'].is_a? String
+
+        cache_options = @config['cache']['options']
+        raise 'cache options must be a hash, or absent' unless cache_options.nil? || cache_options.is_a?(Hash)
       end
 
       def keys_to_sym(hash)
+        return nil if hash.nil? # Don't operate on nil
+
         hash.reduce({}) { |memo, (k, v)| memo[k.to_sym] = v; memo }
       end
     end
