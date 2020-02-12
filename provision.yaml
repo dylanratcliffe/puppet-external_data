@@ -1,10 +1,8 @@
 ---
-master-vagrant:
-  provisioner: vagrant
-  images: ["centos/7", "centos/7"]
-  params:
-    node_name: external_data-master
-    platform: centos:7
-    vagrant_provider: virtualbox
-    vagrant_cpus: 2
-    vagrant_memory: 4096
+docker:
+  provisioner: docker_exp
+  images:
+    - "puppet/puppetserver:latest"
+    # - "puppet/puppetserver:6.7.0"
+    # - "puppet/puppetserver:6.7.1"
+    # - "puppet/puppetserver:6.7.2"

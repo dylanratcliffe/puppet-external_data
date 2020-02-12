@@ -39,3 +39,30 @@ This will be called when a node checks in, with the certname passed in a string.
 #### `name`
 
 This should return the name of the forager.
+
+## Development
+
+Before running any tests, install the gems:
+
+```shell
+bundle install
+```
+
+Run the spec tests:
+
+```shell
+bundle exec rake spec
+```
+
+Provision the acceptance testing environment:
+
+```shell
+bundle exec rake 'litmus:provision_list[docker]'
+```
+
+Install the module:
+
+```shell
+bundle exec rake 'litmus:install_module'
+```
+

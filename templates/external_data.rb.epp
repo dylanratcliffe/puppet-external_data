@@ -1,0 +1,9 @@
+#!/opt/puppetlabs/puppet/bin/ruby
+
+require 'puppet_x/external_data/multiplexer'
+require 'json'
+
+certname    = ARGV[0]
+multiplexer = Puppet_X::ExternalData::Multiplexer.new('<%= $config_file %>')
+
+puts multiplexer.get(certname).to_json

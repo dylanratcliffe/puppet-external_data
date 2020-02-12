@@ -3,3 +3,5 @@ Gemfile:
     ":development":
       - gem: "pry"
       - gem: "pry-byebug"
+spec/spec_helper.rb:
+  mock_with: ":rspec"
