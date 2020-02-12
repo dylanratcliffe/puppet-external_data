@@ -16,7 +16,6 @@ script:
 bundler_args: --without system_tests
 rvm:
   - 2.5.3
-  - 2.5.7
 stages:
   - static
   - spec
@@ -29,7 +28,6 @@ matrix:
       stage: static
     -
       env: PUPPET_GEM_VERSION="~> 6.0" CHECK=spec
-      rvm: 2.5.7
       stage: spec
     -
       before_script: ["bundle exec rake 'litmus:provision_list[docker]'", "bundle exec rake litmus:install_module"]
