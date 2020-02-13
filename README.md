@@ -2,7 +2,46 @@
 
 This module acts as a multiplexer and cache for the [trusted external data](https://tickets.puppetlabs.com/browse/PUP-9994) feature of Puppet. This module execute "foragers" to gather data and stores it in a cache, both of which are pluggable
 
-## Foragers
+## Using This Module
+
+In order to enable this integration, classify all Masters and Compilers with the `external_data` class and then configure:
+
+* **The cache:** This will be used to store data, the recommended cache is `disk` which caches data to a directory on the local filesystem
+* **The Foragers:** This module doesn't contain any foragers, you will have to get those from other modules that are designed to work with this one. You can have as many forager as you like and they will be executed as required to gather external data about your nodes
+
+```puppet
+class { 'external_data':
+  config => {
+    'cache'    => {
+      'name'    => 'disk',
+      'options' => {
+        'path' => '/opt/puppetlabs/cache', # Remeber to create this directory
+      },
+    },
+    'foragers' => [
+      {
+        'name'    => 'example',
+        'options' => {
+          'colour' => 'red',
+        }
+      }
+    ]
+  },
+  notify => Service['pe-puppetserver'],
+}
+```
+
+## Caches
+
+### Disk
+
+This uses the local disk to store cached data in JSON files under a given directory, it is the simplest form of cache and is fairly performant, but lacks any form of synchronisation meaning that if you have many compilers or masters, each will maintain its own cache, increasing the workload for whatever the foragers are hiting.
+
+#### Options
+
+`path`: The path on disk where files should be stored. This needs to exist and should be writable by the user which the puppetserver runs as.
+
+## Writing Foragers
 
 Foragers are the most interesting part of this module, they are used for getting information about nodes from external sources, the following types of foragers are available:
 
