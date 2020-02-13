@@ -35,7 +35,7 @@ class { 'external_data':
 
 ### `disk`
 
-This uses the local disk to store cached data in JSON files under a given directory, it is the simplest form of cache and is fairly performant, but lacks any form of synchronisation meaning that if you have many compilers or masters, each will maintain its own cache, increasing the workload for whatever the foragers are hiting.
+This uses the local disk to store cached data in JSON files under a given directory, it is the simplest form of cache and is fairly performant, but lacks any form of synchronization meaning that if you have many compilers or masters, each will maintain its own cache, increasing the workload for whatever the foragers are hitting.
 
 #### Options
 
@@ -49,25 +49,33 @@ This simply doesn't cache. Any foragers that are designed to use a cache, won't.
 
 This cache has no options.
 
+## Foragers
+
+There are some options that apply to all foragers:
+
+`min_age`: The minimum age for a record in seconds, if records are older younger than this the forager will not be executed at all and the cache will be used.
+
 ## Writing Foragers
 
-Foragers are the most interesting part of this module, they are used for getting information about nodes from external sources, the following types of foragers are available:
+[Example Forager](https://github.com/dylanratcliffe/puppet-external_data/blob/master/lib/puppet_x/external_data/forager/example.rb)
 
-### `:ondemand`
+Foragers are the most interesting part of this module, they are used for getting information about nodes from external sources, the following types of foragers are available
 
-On Demand foragers execute each time the catalog is compiled for a particular host. They do no caching and should only be used when a very high performance backend is in place
+### Types
 
-### `:ondemand_cached`
+#### `:ondemand`
+
+On Demand foragers execute each time the catalog is compiled for a particular host. This assumes that the API we are interacting with doesn't have any way of checking for records that have been updated since a certain time. If combined with `min_age` this allows for a very simple way of creating integrations as each record will be cached until it reaches its `min_age`, then it will be looked up the next time the node checks in., the cache will be used in the meantime. If `min_age` is not set then these won't be cached at all.
+
+#### `:ondemand_cached`
 
 Similar to an `:ondemand` forager except that it is able to receive an empty response from whatever this is querying and treat this as "The data has not changed" in which case the previous data for that node will be returned. These backends will also need to be able to receive a response that means "There is no data here" in which case the cache for that node will need to be cleared and nothing returned to the puppetserver
 
-### `:batch`
+#### `:batch`
 
 Batch foragers will always return cached data on catalog compiles as they only do updates in batches. **This has yet to be implemented**
 
-### Writing Foragers
-
-[Example Forager](https://github.com/dylanratcliffe/puppet-external_data/blob/master/lib/puppet_x/external_data/forager/example.rb)
+### Required Methods
 
 Foragers must implement the following methods:
 

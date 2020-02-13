@@ -1,0 +1,10 @@
+---
+cache:
+  name: none
+  options: {}
+foragers:
+  - name: example
+    options:
+      min_age: 2
+      type: ondemand
+      colour: black

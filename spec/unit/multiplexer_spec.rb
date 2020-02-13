@@ -125,4 +125,32 @@ describe Puppet_X::ExternalData::Multiplexer do # rubocop:disable RSpec/FilePath
       expect(described_class.new(config_file).get('')).to eq({})
     end
   end
+
+  context 'with a min_age forager' do
+    let(:config_file) { config_filepath('min_age') }
+
+    it 'respects the min_age setting' do
+      # Mock the cache so we can be sure it's using it correctly
+      cache = Puppet_X::ExternalData::Cache::None.new
+      expect(Puppet_X::ExternalData::Cache::None).to receive(:new).and_return(cache)
+      multiplexer = described_class.new(config_file)
+
+      # Expect the required metadata hits
+      expect(cache).to receive(:get).with('example', 'metadata-min.age.com-last_run').exactly(3).times.and_call_original
+
+      # These update the cache twice because they also need to store the last
+      # update
+      expect(cache).to receive(:update).and_call_original
+      expect(cache).to receive(:update).and_call_original
+      multiplexer.get('min.age.com')
+
+      expect(cache).to receive(:get).and_call_original
+      multiplexer.get('min.age.com')
+
+      sleep 2
+      expect(cache).to receive(:update).and_call_original
+      expect(cache).to receive(:update).and_call_original
+      multiplexer.get('min.age.com')
+    end
+  end
 end
