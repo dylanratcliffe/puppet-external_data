@@ -24,6 +24,7 @@
 # only do updates in batches.
 #
 require 'logger'
+require 'puppet_x/external_data/metadata'
 
 module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase,Style/ClassAndModuleChildren
   module ExternalData # rubocop:disable Style/ClassAndModuleChildren
@@ -31,6 +32,7 @@ module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase,Style/ClassAndMo
     class Forager
       attr_reader :cache
       attr_reader :logger
+      attr_reader :metadata
 
       def initialize(opts = {})
         # Perform validation
@@ -40,8 +42,9 @@ module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase,Style/ClassAndMo
         @cache = opts[:cache]
 
         # Create logging config
-        @logger = Logger.new(STDERR)
+        @logger       = Logger.new(STDERR)
         @logger.level = Logger::DEBUG
+        @metadata     = Puppet_X::ExternalData::Metadata.new(name, @cache)
       end
 
       # This method will be called each time a catalog is compiled. It should
