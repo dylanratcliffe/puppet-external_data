@@ -42,8 +42,7 @@ module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase,Style/ClassAndMo
         @cache = opts[:cache]
 
         # Create logging config
-        @logger       = Logger.new(STDERR)
-        @logger.level = Logger::DEBUG
+        @logger       = opts[:logger] || Logger.new(STDERR)
         @metadata     = Puppet_X::ExternalData::Metadata.new(name, @cache)
       end
 

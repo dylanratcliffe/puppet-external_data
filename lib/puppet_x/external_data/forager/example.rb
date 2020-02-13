@@ -7,6 +7,9 @@ module Puppet_X::ExternalData # rubocop:disable Style/ClassAndModuleCamelCase
     def initialize(opts)
       @data = nil
       @colour = opts[:colour] || 'not specified'
+
+      raise 'colour must be a string' unless @colour.is_a? String
+
       super(opts)
     end
 
@@ -18,6 +21,8 @@ module Puppet_X::ExternalData # rubocop:disable Style/ClassAndModuleCamelCase
       # If this has been called before then return that it hasn't changed
       return nil if metadata["#{certname}-updated"]
       metadata["#{certname}-updated"] = true
+
+      raise 'certname must not be blank' if certname.empty?
 
       @data = {
         'certname' => certname,

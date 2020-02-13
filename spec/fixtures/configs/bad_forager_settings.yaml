@@ -1,0 +1,10 @@
+---
+cache:
+  name: none
+  options: {}
+foragers:
+  - name: example
+    options:
+      colour:
+        this: shouldnt be a hash
+        why: becasue it's a string

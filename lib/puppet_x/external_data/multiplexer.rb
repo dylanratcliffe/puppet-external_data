@@ -11,6 +11,7 @@
 #     options: {}
 #
 require 'yaml'
+require 'logger'
 
 module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase,Style/ClassAndModuleChildren
   module ExternalData # rubocop:disable Style/ClassAndModuleChildren
@@ -21,6 +22,7 @@ module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase,Style/ClassAndMo
       attr_reader :config
       attr_reader :cache
       attr_reader :foragers
+      attr_reader :logger
 
       def initialize(config_file = nil)
         raise 'No config file specified' if config_file.nil?
@@ -42,6 +44,10 @@ module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase,Style/ClassAndMo
         require "puppet_x/external_data/cache/#{cache_name}"
         @cache = @@cache.new(cache_options)
 
+        # Create a logger
+        @logger       = Logger.new(STDERR)
+        @logger.level = Logger::DEBUG
+
         # Load all of the foragers
         config['foragers'].each do |forager|
           name = forager['name']
@@ -50,12 +56,18 @@ module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase,Style/ClassAndMo
 
           # Pull the options out of the config
           opts = keys_to_sym(forager['options']) || {}
-          opts[:cache] = cache
+          opts[:cache]  = cache
+          opts[:logger] = @logger
 
           # Pull out the forager class and initialize it
           raise "Forager #{name} not found" unless @@forager_classes.key? name
 
-          @foragers << @@forager_classes[name].new(opts)
+          begin
+            @foragers << @@forager_classes[name].new(opts)
+          rescue StandardError => e
+            logger.error "Loading forager #{@@forager_classes[name]} failed with opts: #{opts}"
+            logger.error e
+          end
         end
       end
 
@@ -66,7 +78,12 @@ module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase,Style/ClassAndMo
         @data   = {}
         foragers.each do |forager|
           threads << Thread.new do
-            @data[forager.name] = forager.data_for(certname)
+            begin
+              @data[forager.name] = forager.data_for(certname)
+            rescue StandardError => e
+              logger.error "Forager #{forager.name} encountered an error"
+              logger.error e
+            end
           end
         end
         threads.each(&:join)
