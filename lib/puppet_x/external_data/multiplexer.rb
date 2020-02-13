@@ -76,18 +76,16 @@ module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase,Style/ClassAndMo
         threads = []
         @data   = {}
         foragers.each do |forager|
-          # threads << Thread.new do
+          threads << Thread.new do
             begin
               @data[forager.name] = forager.data_for(certname)
             rescue StandardError => e
-              require 'pry'
-              binding.pry
               logger.error "Forager #{forager.name} encountered an error"
               logger.error e
             end
-          # end
+          end
         end
-        # threads.each(&:join)
+        threads.each(&:join)
 
         # Commit the data to the cache if it's required
         cache.commit
