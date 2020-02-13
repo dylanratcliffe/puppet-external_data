@@ -43,7 +43,7 @@ module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase,Style/ClassAndMo
         @cache = opts[:cache]
 
         # Default min_age to false
-        @min_age = opts[:min_age] ? opts[:min_age].to_i : false
+        @min_age = opts[:min_age] ? opts[:min_age].to_i : false # rubocop:disable Style/TernaryParentheses
 
         # Create logging config
         @logger       = opts[:logger] || Logger.new(STDERR)
