@@ -11,6 +11,7 @@
 #     options: {}
 #
 require 'yaml'
+require 'logger'
 
 module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase,Style/ClassAndModuleChildren
   module ExternalData # rubocop:disable Style/ClassAndModuleChildren
