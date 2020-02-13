@@ -16,6 +16,8 @@ module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase,Style/ClassAndMo
       end
 
       def []=(k, v)
+        raise 'Metadata keys must be strings' unless k.is_a? String
+
         if v.nil?
           @cache.delete(@forager, "metadata-#{k}")
         else

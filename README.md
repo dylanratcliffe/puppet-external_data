@@ -2,25 +2,80 @@
 
 This module acts as a multiplexer and cache for the [trusted external data](https://tickets.puppetlabs.com/browse/PUP-9994) feature of Puppet. This module execute "foragers" to gather data and stores it in a cache, both of which are pluggable
 
+## Using This Module
+
+In order to enable this integration, classify all Masters and Compilers with the `external_data` class and then configure:
+
+* **The cache:** This will be used to store data, the recommended cache is `disk` which caches data to a directory on the local filesystem
+* **The Foragers:** This module doesn't contain any foragers, you will have to get those from other modules that are designed to work with this one. You can have as many forager as you like and they will be executed as required to gather external data about your nodes
+
+```puppet
+class { 'external_data':
+  config => {
+    'cache'    => {
+      'name'    => 'disk',
+      'options' => {
+        'path' => '/opt/puppetlabs/cache', # Remeber to create this directory
+      },
+    },
+    'foragers' => [
+      {
+        'name'    => 'example',
+        'options' => {
+          'colour' => 'red',
+        }
+      }
+    ]
+  },
+  notify => Service['pe-puppetserver'],
+}
+```
+
+## Caches
+
+### `disk`
+
+This uses the local disk to store cached data in JSON files under a given directory, it is the simplest form of cache and is fairly performant, but lacks any form of synchronization meaning that if you have many compilers or masters, each will maintain its own cache, increasing the workload for whatever the foragers are hitting.
+
+#### Options
+
+`path`: The path on disk where files should be stored. This needs to exist and should be writable by the user which the puppetserver runs as.
+
+### `none`
+
+This simply doesn't cache. Any foragers that are designed to use a cache, won't. Any `:batch` foragers will not be able to store their data anywhere and will therefore not work. This was only really created for testing and I can't imagine many uses for it.
+
+#### Options
+
+This cache has no options.
+
 ## Foragers
 
-Foragers are the most interesting part of this module, they are used for getting information about nodes from external sources, the following types of foragers are available:
+There are some options that apply to all foragers:
 
-### `:ondemand`
+`min_age`: The minimum age for a record in seconds, if records are older younger than this the forager will not be executed at all and the cache will be used.
 
-On Demand foragers execute each time the catalog is compiled for a particular host. They do no caching and should only be used when a very high performance backend is in place
+## Writing Foragers
 
-### `:ondemand_cached`
+[Example Forager](https://github.com/dylanratcliffe/puppet-external_data/blob/master/lib/puppet_x/external_data/forager/example.rb)
+
+Foragers are the most interesting part of this module, they are used for getting information about nodes from external sources, the following types of foragers are available
+
+### Types
+
+#### `:ondemand`
+
+On Demand foragers execute each time the catalog is compiled for a particular host. This assumes that the API we are interacting with doesn't have any way of checking for records that have been updated since a certain time. If combined with `min_age` this allows for a very simple way of creating integrations as each record will be cached until it reaches its `min_age`, then it will be looked up the next time the node checks in., the cache will be used in the meantime. If `min_age` is not set then these won't be cached at all.
+
+#### `:ondemand_cached`
 
 Similar to an `:ondemand` forager except that it is able to receive an empty response from whatever this is querying and treat this as "The data has not changed" in which case the previous data for that node will be returned. These backends will also need to be able to receive a response that means "There is no data here" in which case the cache for that node will need to be cleared and nothing returned to the puppetserver
 
-### `:batch`
+#### `:batch`
 
 Batch foragers will always return cached data on catalog compiles as they only do updates in batches. **This has yet to be implemented**
 
-### Writing Foragers
-
-[Example Forager](https://github.com/dylanratcliffe/puppet-external_data/blob/master/lib/puppet_x/external_data/forager/example.rb)
+### Required Methods
 
 Foragers must implement the following methods:
 

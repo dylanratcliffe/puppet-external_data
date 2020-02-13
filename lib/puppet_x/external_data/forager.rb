@@ -33,6 +33,7 @@ module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase,Style/ClassAndMo
       attr_reader :cache
       attr_reader :logger
       attr_reader :metadata
+      attr_reader :min_age
 
       def initialize(opts = {})
         # Perform validation
@@ -40,6 +41,9 @@ module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase,Style/ClassAndMo
 
         raise ':cache option must be specified' unless opts[:cache]
         @cache = opts[:cache]
+
+        # Default min_age to false
+        @min_age = opts[:min_age] ? opts[:min_age].to_i : false # rubocop:disable Style/TernaryParentheses
 
         # Create logging config
         @logger       = opts[:logger] || Logger.new(STDERR)
@@ -50,33 +54,58 @@ module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase,Style/ClassAndMo
       # return the data for a given node. Mostly it is responsible for calling
       # out to the appropriate methods to actually go and get the data.
       def data_for(certname)
-        logger.info("Finding data for #{certname} using forager #{name}")
+        logger.info("#{name}: Finding data for #{certname}")
+
+        # Only run this if we are using the feature, this will reduce load on
+        # the metadata
+        if min_age
+          # Check the minimum age. This allows simpler foragers to retrieve
+          # information for a node every x seconds, as needed. This will be
+          # useful for APIs that don't have an "updated since" feature
+          last_run = metadata["#{certname}-last_run"].to_i
+          now      = Time.now.to_i
+          if (now - last_run) < min_age
+            logger.info("#{name}: #{certname} not older than min_age, using cache")
+            return cache.get(name, certname)
+          else
+            metadata["#{certname}-last_run"] = now
+          end
+        end
 
         case type
         when :ondemand
-          get_data(certname)
+          data = get_data(certname)
+
+          # Only bother caching the data if there is a minimum age set,
+          # otherwise the cache will never be used and there is no point
+          if min_age != false
+            logger.info("#{name}: #{certname} updated, persisting to cache")
+            cache.update(name, certname, data)
+          end
+
+          return data
         when :ondemand_cached
           # Get the data
           data = get_data(certname)
 
           case data
           when nil
-            logger.info("#{certname} not updated, using cache")
+            logger.info("#{name}: #{certname} not updated, using cache")
 
             # This means that nothing has changed and we should use the cache
             return cache.get(name, certname)
           when {}
-            logger.info("#{certname} deleted, deleting cached data")
+            logger.info("#{name}: #{certname} deleted, deleting cached data")
 
             # When an empty hash is returned it means that we need to delete the
             # cached data and return nothing
             cache.delete(name, certname)
-            logger.info("#{certname} deleted form cache")
+            logger.info("#{name}: #{certname} deleted form cache")
             return nil
           else
-            logger.info("#{certname} updated, persisting to cache")
+            logger.info("#{name}: #{certname} updated, persisting to cache")
             cache.update(name, certname, data)
-            logger.info("#{certname} saved to cache")
+            logger.info("#{name}: #{certname} saved to cache")
             return data
           end
         when :batch

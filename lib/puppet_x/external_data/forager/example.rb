@@ -7,6 +7,9 @@ module Puppet_X::ExternalData # rubocop:disable Style/ClassAndModuleCamelCase
     def initialize(opts)
       @data = nil
       @colour = opts[:colour] || 'not specified'
+      # Since this is only used for testing it's good to be able to change the
+      # way it works
+      @type   = opts[:type] || :ondemand_cached
 
       raise 'colour must be a string' unless @colour.is_a? String
 
@@ -14,13 +17,17 @@ module Puppet_X::ExternalData # rubocop:disable Style/ClassAndModuleCamelCase
     end
 
     def type
-      :ondemand_cached
+      # Usually this swould just be static i.e.
+      # :ondemand
+      @type.to_sym
     end
 
     def get_data(certname)
       # If this has been called before then return that it hasn't changed
-      return nil if metadata["#{certname}-updated"]
-      metadata["#{certname}-updated"] = true
+      if type == :ondemand_cached
+        return nil if metadata["#{certname}-updated"]
+        metadata["#{certname}-updated"] = true
+      end
 
       raise 'certname must not be blank' if certname.empty?
 
