@@ -1,6 +1,6 @@
 {
   "name": "dylanratcliffe-external_data",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": "Dylan Ratcliffe",
   "summary": "Allows user to have many trusted external data sources",
   "license": "Apache-2.0",
