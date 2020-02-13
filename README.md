@@ -33,13 +33,21 @@ class { 'external_data':
 
 ## Caches
 
-### Disk
+### `disk`
 
 This uses the local disk to store cached data in JSON files under a given directory, it is the simplest form of cache and is fairly performant, but lacks any form of synchronisation meaning that if you have many compilers or masters, each will maintain its own cache, increasing the workload for whatever the foragers are hiting.
 
 #### Options
 
 `path`: The path on disk where files should be stored. This needs to exist and should be writable by the user which the puppetserver runs as.
+
+### `none`
+
+This simply doesn't cache. Any foragers that are designed to use a cache, won't. Any `:batch` foragers will not be able to store their data anywhere and will therefore not work. This was only really created for testing and I can't imagine many uses for it.
+
+#### Options
+
+This cache has no options.
 
 ## Writing Foragers
 
