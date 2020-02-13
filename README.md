@@ -42,6 +42,18 @@ This will be called when a node checks in, with the certname passed in a string.
 
 This should return the name of the forager.
 
+#### Using Metadata
+
+Foragers have a `metadata` method which can be used to store metadata such as the last updated time. It acts like a hash but stores data in the cache and can be accessed like so:
+
+```ruby
+if metadata["#{certname}-LastUpdated"] > 1
+  # Do something
+end
+```
+
+Note that it is recommended to only use string keys.
+
 ### Writing Caches
 
 [Example Cache](https://github.com/dylanratcliffe/puppet-external_data/blob/master/lib/puppet_x/external_data/cache/disk.rb)

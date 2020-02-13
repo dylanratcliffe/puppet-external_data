@@ -16,7 +16,8 @@ module Puppet_X::ExternalData # rubocop:disable Style/ClassAndModuleCamelCase
 
     def get_data(certname)
       # If this has been called before then return that it hasn't changed
-      return nil if @data
+      return nil if metadata["#{certname}-updated"]
+      metadata["#{certname}-updated"] = true
 
       @data = {
         'certname' => certname,
