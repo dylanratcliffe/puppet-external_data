@@ -112,4 +112,17 @@ describe Puppet_X::ExternalData::Multiplexer do # rubocop:disable RSpec/FilePath
       expect { described_class.new(config_file) }.to raise_error(%r{invalid_yaml.yaml})
     end
   end
+
+  context 'with a failing forager' do
+    let(:config_file) { config_filepath('bad_forager_settings') }
+
+    it 'doesn\'t crash for initialisation failures' do
+      expect { described_class.new(config_file) }.not_to raise_error
+    end
+
+    it 'returns no data for runtime failures' do
+      expect { described_class.new(config_file) }.not_to raise_error
+      expect(described_class.new(config_file).get('')).to eq({})
+    end
+  end
 end
