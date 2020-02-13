@@ -1,9 +1,9 @@
 require 'puppet_x/external_data/forager/example'
-require 'puppet_x/external_data/cache'
+require 'puppet_x/external_data/cache/none'
 require 'logger'
 
 describe Puppet_X::ExternalData::Forager::Example do # rubocop:disable RSpec/FilePath
-  let(:cache) { Puppet_X::ExternalData::Cache.new }
+  let(:cache) { Puppet_X::ExternalData::Cache::None.new }
   let(:forager) do
     f = described_class.new(cache: cache)
 
@@ -46,13 +46,13 @@ describe Puppet_X::ExternalData::Forager::Example do # rubocop:disable RSpec/Fil
     end
 
     it 'stores data to the cache' do
-      expect(cache).to receive(:update).and_call_original
+      expect(cache).to receive(:update).exactly(2).times.and_call_original
       expect(forager.data_for('store.example.com')).to be_a(Hash)
     end
 
     it 'returns data from the cache' do
-      expect(cache).to receive(:update).and_call_original
-      expect(cache).to receive(:get).and_call_original
+      expect(cache).to receive(:update).exactly(2).times.and_call_original
+      expect(cache).to receive(:get).exactly(3).times.and_call_original
       expect(forager.data_for('get.example.com')).to be_a(Hash)
       expect(forager.data_for('get.example.com')).to be_a(Hash)
     end
