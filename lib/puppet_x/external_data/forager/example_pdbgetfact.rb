@@ -4,7 +4,7 @@ require 'puppet_x/external_data/util'
 
 module Puppet_X::ExternalData # rubocop:disable Style/ClassAndModuleCamelCase
   # Example forager, not very useful other than testing
-  class Forager::Example_Pdbquery < Puppet_X::ExternalData::Forager
+  class Forager::Example_Pdbgetfact < Puppet_X::ExternalData::Forager
     def initialize(opts)
       @data = nil
       # Since this is only used for testing it's good to be able to change the
@@ -30,7 +30,7 @@ module Puppet_X::ExternalData # rubocop:disable Style/ClassAndModuleCamelCase
       raise 'certname must not be blank' if certname.empty?
 
       # Query PuppetDB for the nodes 'hostname' fact
-      hostname = Util.pal_pdb_query(certname, 'hostname')
+      hostname = Util.pdb_get_fact(certname, 'hostname')
 
       @data = {
         'certname' => certname,
@@ -39,10 +39,10 @@ module Puppet_X::ExternalData # rubocop:disable Style/ClassAndModuleCamelCase
     end
 
     def name
-      'example_pdbquery'
+      'example_pdbgetfact'
     end
 
   end
 end
 
-Puppet_X::ExternalData::Multiplexer.register_forager('example_pdbquery', Puppet_X::ExternalData::Forager::Example_Pdbquery)
+Puppet_X::ExternalData::Multiplexer.register_forager('example_pdbgetfact', Puppet_X::ExternalData::Forager::Example_Pdbgetfact)

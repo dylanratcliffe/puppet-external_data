@@ -16,7 +16,7 @@ module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase,Style/ClassAndMo
       #     Also used to resolve certificate locations to connect to puppetdb.
       #     Defaults to /etc/puppetlabs/puppet
       #
-      def self.pal_pdb_query(certname, factpath, puppetdb={confdir: '/etc/puppetlabs/puppet'})
+      def self.pdb_get_fact(certname, factpath, puppetdb={confdir: '/etc/puppetlabs/puppet'})
         if factpath.include?('.')
           ast_query = ["from", "fact_contents", ["and", ["=", "certname", "#{certname}"], ["=", "path", factpath.split('.')]]]
         else
