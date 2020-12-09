@@ -17,21 +17,19 @@ module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase,Style/ClassAndMo
       #     Defaults to /etc/puppetlabs/puppet
       #
       def self.pdb_get_fact(certname, factpath, puppetdb={confdir: '/etc/puppetlabs/puppet'})
-        if factpath.include?('.')
-          ast_query = ["from", "fact_contents", ["and", ["=", "certname", "#{certname}"], ["=", "path", factpath.split('.')]]]
-        else
-          ast_query = ["from", "facts", ["and", ["=", "certname", "#{certname}"], ["=", "name", factpath]]]
-        end
+        ast_query = ["from", "inventory", ["extract", "facts.#{factpath}",["=", "certname", "#{certname}"]]]
 
-        Puppet.initialize_settings
+        Puppet.initialize_settings unless Puppet.settings.global_defaults_initialized?
+
         Puppet[:confdir] = puppetdb[:confdir]
 
-        result = Puppet::Pal.in_tmp_environment('pal_env', modulepath: [], facts: {}) do |pal|
+        result = Puppet::Pal.in_tmp_environment("pal_env", modulepath: [], facts: {}) do |pal|
           pal.with_catalog_compiler do |compiler|
             compiler.call_function('puppetdb_query', ast_query)
           end
         end 
-        result.first['value']
+
+        result.first["facts.#{factpath}"]
       end
 
     end

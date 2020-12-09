@@ -31,10 +31,13 @@ module Puppet_X::ExternalData # rubocop:disable Style/ClassAndModuleCamelCase
 
       # Query PuppetDB for the nodes 'hostname' fact
       hostname = Util.pdb_get_fact(certname, 'hostname')
+      # Query PuppetDB for the 'release' leaf of the 'os' structured fact
+      os_release = Util.pdb_get_fact(certname, 'os.release')
 
       @data = {
-        'certname' => certname,
-        'hostname' => hostname,
+        'certname'   => certname,
+        'hostname'   => hostname,
+        'os_release' => os_release,
       }
     end
 
