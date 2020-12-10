@@ -153,8 +153,8 @@ module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase,Style/ClassAndMo
       #     Also used to resolve certificate locations to connect to puppetdb.
       #     Defaults to /etc/puppetlabs/puppet
       #
-      def pdb_get_fact(certname, factpath, puppetdb={confdir: '/etc/puppetlabs/puppet'})
-        ast_query = ["from", "inventory", ["extract", "facts.#{factpath}",["=", "certname", "#{certname}"]]]
+      def pdb_get_fact(certname, factpath, puppetdb = { confdir: '/etc/puppetlabs/puppet' })
+        ast_query = ['from', 'inventory', ['extract', "facts.#{factpath}", ['=', 'certname', certname]]]
 
         # Puppet settings can only be initialized once
         unless Puppet.settings.global_defaults_initialized?
@@ -163,12 +163,12 @@ module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase,Style/ClassAndMo
         end
 
         begin
-          # Use PAL to call puppetdb_query function 
-          result = Puppet::Pal.in_tmp_environment("pal_env", modulepath: [], facts: {}) do |pal|
+          # Use PAL to call puppetdb_query function
+          result = Puppet::Pal.in_tmp_environment('pal_env', modulepath: [], facts: {}) do |pal|
             pal.with_catalog_compiler do |compiler|
               compiler.call_function('puppetdb_query', ast_query)
             end
-          end 
+          end
 
           # When successful result will be an array in the following form:
           #   [{"facts.#{factpath}" => value_of_fact}]
@@ -182,7 +182,6 @@ module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase,Style/ClassAndMo
           nil
         end
       end
-     
     end
   end
 end

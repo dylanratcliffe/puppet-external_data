@@ -3,12 +3,12 @@ require 'puppet_x/external_data/multiplexer'
 
 module Puppet_X::ExternalData # rubocop:disable Style/ClassAndModuleCamelCase
   # Example forager, not very useful other than testing
-  class Forager::Example_Pdbgetfact < Puppet_X::ExternalData::Forager
+  class Forager::Example_Pdbgetfact < Puppet_X::ExternalData::Forager # rubocop:disable Style/ClassAndModuleCamelCase
     def initialize(opts)
       @data = nil
       # Since this is only used for testing it's good to be able to change the
       # way it works
-      @type   = opts[:type] || :ondemand
+      @type = opts[:type] || :ondemand
 
       super(opts)
     end
@@ -43,7 +43,6 @@ module Puppet_X::ExternalData # rubocop:disable Style/ClassAndModuleCamelCase
     def name
       'example_pdbgetfact'
     end
-
   end
 end
 
