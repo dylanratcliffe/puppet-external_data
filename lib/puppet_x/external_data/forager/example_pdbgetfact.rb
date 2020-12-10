@@ -1,6 +1,5 @@
 require 'puppet_x/external_data/forager'
 require 'puppet_x/external_data/multiplexer'
-#require 'puppet_x/external_data/util'
 
 module Puppet_X::ExternalData # rubocop:disable Style/ClassAndModuleCamelCase
   # Example forager, not very useful other than testing

@@ -156,18 +156,31 @@ module Puppet_X # rubocop:disable Style/ClassAndModuleCamelCase,Style/ClassAndMo
       def pdb_get_fact(certname, factpath, puppetdb={confdir: '/etc/puppetlabs/puppet'})
         ast_query = ["from", "inventory", ["extract", "facts.#{factpath}",["=", "certname", "#{certname}"]]]
 
+        # Puppet settings can only be initialized once
         unless Puppet.settings.global_defaults_initialized?
           Puppet.initialize_settings
           Puppet[:confdir] = puppetdb[:confdir]
         end
 
-        result = Puppet::Pal.in_tmp_environment("pal_env", modulepath: [], facts: {}) do |pal|
-          pal.with_catalog_compiler do |compiler|
-            compiler.call_function('puppetdb_query', ast_query)
-          end
-        end 
+        begin
+          # Use PAL to call puppetdb_query function 
+          result = Puppet::Pal.in_tmp_environment("pal_env", modulepath: [], facts: {}) do |pal|
+            pal.with_catalog_compiler do |compiler|
+              compiler.call_function('puppetdb_query', ast_query)
+            end
+          end 
 
-        result.first["facts.#{factpath}"]
+          # When successful result will be an array in the following form:
+          #   [{"facts.#{factpath}" => value_of_fact}]
+          # Otherwise it will be an empty array
+          #
+          # On success return the value_of_fact otherwise return nil
+          result.empty? ? nil : result.first["facts.#{factpath}"]
+        rescue Puppet::Error => e
+          # Rescue any Puppet::Error's produced by PAL and log them as warnings.
+          logger.warn("#{name}: #{e.message}")
+          nil
+        end
       end
      
     end
