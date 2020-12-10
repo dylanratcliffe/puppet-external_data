@@ -109,6 +109,24 @@ end
 
 Note that it is recommended to only use string keys.
 
+#### Using Facts
+
+Foragers have a `pdb_get_fact` method which can be used to query PuppetDB for a fact present for the given node.
+
+**Note:** This will always return `nil` the first time a node checks in since PuppetDB won't have any information about the node until after the first agent run.
+
+Dot notation is supported for specifing structured facts. For example:
+
+```ruby
+pdb_get_fact(certname, 'os.release')
+```
+
+Would return `{"full"=>"7.6.1810", "major"=>"7", "minor"=>"6"}` when a nodes `os` fact is:
+```ruby
+{"name"=>"CentOS", "family"=>"RedHat", "release"=>{"full"=>"7.6.1810", "major"=>"7", "minor"=>"6"}, "selinux"=>{"enabled"=>true, "enforced"=>true, "config_mode"=>"enforcing", "current_mode"=>"enforcing", "config_policy"=>"targeted", "policy_version"=>"31"}, "hardware"=>"x86_64", "architecture"=>"x86_64"}
+```
+
+
 ### Writing Caches
 
 [Example Cache](https://github.com/dylanratcliffe/puppet-external_data/blob/master/lib/puppet_x/external_data/cache/disk.rb)
