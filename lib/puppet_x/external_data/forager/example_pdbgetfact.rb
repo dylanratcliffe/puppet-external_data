@@ -1,6 +1,6 @@
 require 'puppet_x/external_data/forager'
 require 'puppet_x/external_data/multiplexer'
-require 'puppet_x/external_data/util'
+#require 'puppet_x/external_data/util'
 
 module Puppet_X::ExternalData # rubocop:disable Style/ClassAndModuleCamelCase
   # Example forager, not very useful other than testing
@@ -30,9 +30,9 @@ module Puppet_X::ExternalData # rubocop:disable Style/ClassAndModuleCamelCase
       raise 'certname must not be blank' if certname.empty?
 
       # Query PuppetDB for the nodes 'hostname' fact
-      hostname = Util.pdb_get_fact(certname, 'hostname')
+      hostname = pdb_get_fact(certname, 'hostname')
       # Query PuppetDB for the 'release' leaf of the 'os' structured fact
-      os_release = Util.pdb_get_fact(certname, 'os.release')
+      os_release = pdb_get_fact(certname, 'os.release')
 
       @data = {
         'certname'   => certname,
