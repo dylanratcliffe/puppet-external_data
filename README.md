@@ -115,7 +115,7 @@ Foragers have a `pdb_get_fact` method which can be used to query PuppetDB for a 
 
 **Note:** This will always return `nil` the first time a node checks in since PuppetDB won't have any information about the node until after the first agent run.
 
-Dot notation is supported for specifing structured facts. For example:
+Dot notation is supported for specifying structured facts. For example:
 
 ```ruby
 pdb_get_fact(certname, 'os.release')
