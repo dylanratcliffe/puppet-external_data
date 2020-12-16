@@ -2,5 +2,6 @@
 docker:
   provisioner: docker_exp
   images:
+    - "puppet/puppetserver:edge"
     - "puppet/puppetserver:latest"
     - "puppet/puppetserver:6.7.2"
